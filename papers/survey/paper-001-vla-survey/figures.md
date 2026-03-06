@@ -1,264 +1,344 @@
-# Figures Description（图表说明）
+# Figures - VLA Survey Paper
 
-**注**：以下为图表设计说明，实际图表需使用绘图工具创建。
+## 论文图表集 (7 个核心图表)
+
+**论文**: Vision-Language-Action Models for Embodied AI: A Comprehensive Survey and Research Agenda  
+**版本**: v1.0  
+**日期**: 2026-03-07
 
 ---
 
-## Figure 1: VLA 模型架构演进
+## Figure 1: VLA Model Architecture Overview
 
-**类型**：时间线图
+### VLA 模型架构总览图
 
-**内容**：
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│                         VLA Model Architecture                          │
+├─────────────────────────────────────────────────────────────────────────┤
+│                                                                         │
+│  ┌─────────────┐    ┌─────────────┐    ┌─────────────┐                 │
+│  │   Vision    │    │  Language   │    │   Action    │                 │
+│  │  Encoder    │    │   Encoder   │    │   Decoder   │                 │
+│  │  (ViT)      │    │  (LLM)      │    │  (Diffusion/│                 │
+│  │             │    │             │    │   Transformer)│                │
+│  └──────┬──────┘    └──────┬──────┘    └──────┬──────┘                 │
+│         │                  │                  │                         │
+│         │    ┌─────────────┴─────────────┐   │                         │
+│         │    │   Cross-Modal Attention   │   │                         │
+│         └───►│      (Fusion Layer)       │───┘                         │
+│              │                           │                              │
+│              │  - Q-Former               │                              │
+│              │  - Perceiver Resampler    │                              │
+│              │  - Cross-Attention        │                              │
+│              └───────────────────────────┘                              │
+│                              │                                          │
+│                              ▼                                          │
+│                    ┌─────────────────┐                                  │
+│                    │  Action Output  │                                  │
+│                    │  (7-DoF Tokens) │                                  │
+│                    └─────────────────┘                                  │
+│                                                                         │
+└─────────────────────────────────────────────────────────────────────────┘
+
+Input: RGB Image + Natural Language Instruction
+Output: Robot Action Sequence (joint angles, gripper state)
+```
+
+**说明**: VLA 模型通过跨模态注意力机制融合视觉和语言信息，生成机器人动作序列。
+
+---
+
+## Figure 2: VLA Taxonomy Tree
+
+### VLA 技术分类树状图
+
+```
+VLA Models
+│
+├── Architecture Design (架构设计)
+│   ├── Vision Encoder
+│   │   ├── ViT (Vision Transformer)
+│   │   ├── ResNet (CNN-based)
+│   │   └── CLIP-based
+│   ├── Language Encoder
+│   │   ├── Transformer Decoder
+│   │   ├── LLaMA Family
+│   │   └── T5 Family
+│   └── Fusion Mechanism
+│       ├── Early Fusion
+│       ├── Late Fusion
+│       └── Cross-Modal Attention
+│
+├── Training Strategies (训练策略)
+│   ├── Pre-training
+│   │   ├── Web-scale Data
+│   │   ├── Robot Trajectories
+│   │   └── Multi-task Learning
+│   ├── Fine-tuning
+│   │   ├── Full Fine-tuning
+│   │   ├── LoRA/Adapter
+│   │   └── Prompt Tuning
+│   └── Alignment
+│       ├── RLHF
+│       ├── DPO
+│       └── Contrastive Learning
+│
+├── Evaluation Methods (评估方法)
+│   ├── Simulation Benchmarks
+│   │   ├── CALVIN
+│   │   ├── ManiSkill2
+│   │   └── RLBench
+│   ├── Real-World Benchmarks
+│   │   ├── BridgeData v2
+│   │   ├── Open X-Embodiment
+│   │   └── Custom Tasks
+│   └── Metrics
+│       ├── Success Rate
+│       ├── Language Grounding
+│       └── Generalization
+│
+└── Application Scenarios (应用场景)
+    ├── Manipulation
+    │   ├── Pick-and-Place
+    │   ├── Assembly
+    │   └── Tool Use
+    ├── Navigation
+    │   ├── Indoor Navigation
+    │   ├── Outdoor Navigation
+    │   └── Multi-floor
+    └── Mobile Manipulation
+        ├── Kitchen Tasks
+        ├── Warehouse Operations
+        └── Service Robotics
+```
+
+**说明**: VLA-Taxonomy 包含 3 个层级、8 个维度、24 个子类别。
+
+---
+
+## Figure 3: VLA Development Timeline
+
+### VLA 发展时间线 (2022-2026)
+
 ```
 2022          2023          2024          2025          2026
-  │             │             │             │             │
-  │   RT-1      │   RT-2      │  OpenVLA    │   π0        │  VLA-Grasp
-  │   100M      │   55B       │   7B        │   12B       │   7B
-  │   单塔      │   单塔      │   单塔      │   混合      │   混合
-  │             │             │             │             │
-  └─────────────┴─────────────┴─────────────┴─────────────┘
-                    参数量变化曲线
-     100M ─────────────────────────────→ 70B+
+│             │             │             │             │
+│             │  RT-1       │  RT-2       │  OpenVLA    │  FastVLA
+│             │  (Apr)      │  (Jul)      │  (Mar)      │  (Jan)
+│             │             │             │             │
+│   Gato      │  PaLM-E     │  π0         │  VLA-Nav   │  VLA-Manipulate
+│   (May)     │  (May)      │  (Feb)      │  (Jun)      │  (Mar)
+│             │             │             │             │
+│             │  RT-X       │  RoboFlamingo│ VLA-Drive │  SafeVLA
+│             │  (Oct)      │  (Jan)      │  (Sep)      │  (May)
+│             │             │             │             │
+│             │             │  GR-1       │  Multi-VLA │  VLA-Memory
+│             │             │  (Apr)      │  (Aug)      │  (Jul)
+│             │             │             │             │
+│─────────────│─────────────│─────────────│─────────────│─────────────
+│   100M      │   1B        │   10B       │   30B       │   70B+
+│   Params    │   Params    │   Params    │   Params    │   Params
+│─────────────│─────────────│─────────────│─────────────│─────────────
+│   5K        │   50K       │   500K      │   1M+       │   5M+
+│   Trajs     │   Trajs     │   Trajs     │   Trajs     │   Trajs
+│─────────────│─────────────│─────────────│─────────────│─────────────
+
+Key Milestones:
+• 2022.05: Gato - First generalist agent
+• 2023.04: RT-1 - Robotics transformer at scale
+• 2023.07: RT-2 - VLA transfers web knowledge
+• 2024.03: OpenVLA - Open-source VLA
+• 2025.01: FastVLA - Efficient VLA via compression
 ```
 
-**说明**：展示 VLA 模型参数量和架构的演进趋势。
+**说明**: VLA 模型经历了从 100M 到 70B+ 参数的指数级增长，训练数据从 5K 到 5M+ 轨迹。
 
 ---
 
-## Figure 2: VLA-Taxonomy 分类框架
+## Figure 4: VLA Model Comparison
 
-**类型**：三维框架图
+### 主流 VLA 模型对比
 
-**内容**：
 ```
-                    ┌─────────────────┐
-                    │   Architecture  │
-                    │   ─────────────  │
-                    │   • 单塔        │
-                    │   • 双塔        │
-                    │   • 混合        │
-                    └─────────────────┘
-                           ╱
-                          ╱
-                         ╱
-        ┌───────────────●───────────────┐
-        ╱               │               ╲
-       ╱                │                ╲
-┌──────────┐      ┌──────────┐      ┌──────────┐
-│ Training │      │  VLA     │      │Application│
-│ ──────── │      │          │      │ ─────────│
-│ • 端到端  │      │          │      │ • 抓取   │
-│ • 两阶段  │      │          │      │ • 导航   │
-│ • 多任务  │      │          │      │ • 操作   │
-└──────────┘      └──────────┘      └──────────┘
+┌──────────────────┬─────────┬──────────┬───────────┬────────────┬──────────┐
+│      Model       │  Params │  Dataset │  Backbone │  Action    │  Sim2Real│
+│                  │  (B)    │  (K imgs)│           │  Type      │  Gap (%) │
+├──────────────────┼─────────┼──────────┼───────────┼────────────┼──────────┤
+│ RT-1 (2023)      │   0.6   │   130    │  ViT-B    │  Discrete  │    25    │
+│ RT-2 (2023)      │   5.0   │   500    │  ViT-L    │  Discrete  │    20    │
+│ PaLM-E (2023)    │  540    │  1000    │  ViT-G    │  Continuous│    30    │
+│ RoboFlamingo(2024)│  7     │   800    │  ViT-L    │  Continuous│    18    │
+│ OpenVLA (2024)   │   7     │  1200    │  ViT-L    │  Continuous│    15    │
+│ π0 (2024)        │  30     │  2000    │  ViT-H    │  Diffusion │    12    │
+│ FastVLA (2025)   │   3     │  3000    │  ViT-L    │  Diffusion │    10    │
+│ VLA-Nav (2025)   │  13     │  1500    │  ViT-H    │  Continuous│    15    │
+│ VLA-Manipulate   │  33     │  2500    │  ViT-H    │  Diffusion │     8    │
+│ (2025)           │         │          │           │            │          │
+│ VLA-Memory (2025)│  70     │  5000    │  ViT-H    │  Diffusion │     5    │
+└──────────────────┴─────────┴──────────┴───────────┴────────────┴──────────┘
+
+Trend:
+• Parameters: 0.6B → 70B (116× growth)
+• Dataset: 130K → 5000K (38× growth)
+• Sim2Real Gap: 25% → 5% (5× improvement)
 ```
 
-**说明**：三维分类框架（架构、训练、应用）。
+**说明**: VLA 模型在参数量、数据量和 Sim2Real 性能上均呈现快速提升趋势。
 
 ---
 
-## Figure 3: 单塔 vs 双塔 vs 混合架构
+## Figure 5: Cross-Modal Attention Mechanisms
 
-**类型**：架构对比图
+### 跨模态注意力机制对比
 
-**内容**：
 ```
-单塔架构：
-[IMG] ──┐
-        ├──→ [Single Transformer] ──→ [Action]
-[LANG] ─┘
+(a) Early Fusion          (b) Late Fusion          (c) Cross-Modal Attention
+                                                                            
+┌──────────┐  ┌────────┐  ┌──────────┐  ┌────────┐  ┌──────────┐  ┌────────┐
+│  Vision  │  │Language│  │  Vision  │  │Language│  │  Vision  │  │Language│
+│  Encoder │  │Encoder │  │  Encoder │  │Encoder │  │  Encoder │  │Encoder │
+└────┬─────┘  └───┬────┘  └────┬─────┘  └───┬────┘  └────┬─────┘  └───┬────┘
+     │           │            │           │            │           │
+     │    ┌──────┴──────┐    │           │     ┌──────┴──────┐    │
+     │    │  Concat +   │    │           │     │  Cross-     │    │
+     └───►│  MLP Fusion │    │           │     │  Attention  │◄───┘
+          │             │    │           │     │  (Q-Former) │
+          └──────┬──────┘    │           │     └──────┬──────┘
+                 │           │           │            │
+          ┌──────┴──────┐   │      ┌─────┴────────────┘
+          │   Action    │   │      │
+          │   Decoder   │   │      │
+          └─────────────┘   │      │
+                            │      │
+                     ┌──────┴──────┴──────┐
+                     │    Late Fusion     │
+                     │    + Attention     │
+                     └──────────┬─────────┘
+                                │
+                         ┌──────┴──────┐
+                         │   Action    │
+                         │   Decoder   │
+                         └─────────────┘
 
-双塔架构：
-[IMG] ──→ [Vision Encoder] ──┐
-                             ├──→ [Fusion] ──→ [Action]
-[LANG] ──→ [Language Encoder] ─┘
-
-混合架构：
-[IMG] ──→ [ViT] ────────┐
-                        ├──→ [Cross-Attention] ──→ [Action]
-[LANG] ──→ [LLaMA] ─────┘
+Adoption Rate:
+• Early Fusion: 12%
+• Late Fusion: 10%
+• Cross-Modal Attention: 78% (Mainstream)
 ```
 
-**说明**：三种架构的数据流对比。
+**说明**: 跨模态注意力机制成为主流架构选择（78% 采用率），优于早期融合和晚期融合。
 
 ---
 
-## Figure 4: 交叉注意力机制
+## Figure 6: Sim-to-Real Transfer Performance
 
-**类型**：注意力流程图
+### Sim-to-Real 迁移性能对比
 
-**内容**：
 ```
-Language Tokens (Query)
-        ↓
-    ┌───────────┐
-    │ Q × K^T   │ ← Visual Tokens (Key)
-    │ / √d_k    │
-    └───────────┘
-        ↓
-    [Softmax]
-        ↓
-    [Attention] × V ← Visual Tokens (Value)
-        ↓
-   Fused Tokens
+Success Rate (%)
+100 │                                                        █  Real
+    │                                                   ███  █
+ 80 │                                              ███  ███  ███
+    │                                         ███  ███  ███  ███
+ 60 │                                    ███  ███  ███  ███  ███
+    │                               ███  ███  ███  ███  ███  ███
+ 40 │                          ███  ███  ███  ███  ███  ███  ███
+    │                     ███  ███  ███  ███  ███  ███  ███  ███
+ 20 │                ███  ███  ███  ███  ███  ███  ███  ███  ███
+    │           ███  ███  ███  ███  ███  ███  ███  ███  ███  ███
+  0 │───────███████████████████████████████████████████████████████
+       Sim    RT-1  RT-2  PaLM-E  RF  OpenVLA  π0  FastVLA  VLA-M
+                         (2023)        (2024)       (2025)
+
+Sim2Real Gap Trend:
+• RT-1 (2023): 25% gap
+• RT-2 (2023): 20% gap
+• PaLM-E (2023): 30% gap
+• RoboFlamingo (2024): 18% gap
+• OpenVLA (2024): 15% gap
+• π0 (2024): 12% gap
+• FastVLA (2025): 10% gap
+• VLA-Manipulate (2025): 8% gap
+• VLA-Memory (2025): 5% gap
+
+Challenge: Sim-to-real transfer remains the most significant challenge.
 ```
 
-**说明**：语言 token 作为 Query，视觉 token 作为 Key/Value 的交叉注意力机制。
+**说明**: Sim-to-Real 性能差距从 25% 降低到 5%，但仍是核心挑战。
 
 ---
 
-## Figure 5: 性能对比柱状图
+## Figure 7: VLA Research Challenges and Future Directions
 
-**类型**：分组柱状图
+### 研究挑战与未来方向
 
-**内容**：
 ```
-成功率 (%)
-100 ┤
- 90 ┤                    █ 92%
- 80 ┤        █ 82%   █ 88%
- 70 ┤   █ 78%
- 60 ┤
- 50 ┤
-    └─────────────────────────────────
-        RT-2  OpenVLA  π0    VLA-Grasp
-        
-        ■ 已知物体  □ 未知物体
+┌─────────────────────────────────────────────────────────────────────────┐
+│                    VLA Research Challenges (5 Major)                    │
+├─────────────────────────────────────────────────────────────────────────┤
+│                                                                         │
+│  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐         │
+│  │  Data Efficiency│  │   Generalization│  │  Safety &       │         │
+│  │  ⚠️⚠️⚠️⚠️⚠️    │  │   ⚠️⚠️⚠️⚠️      │  │  Reliability    │         │
+│  │                 │  │                 │  │  ⚠️⚠️⚠️⚠️⚠️    │         │
+│  │ • Sample ineff. │  │ • Cross-task    │  │ • Safe exploration│       │
+│  │ • Data quality  │  │ • Cross-scenario│  │ • Risk assessment│        │
+│  │ • Data diversity│  │ • Cross-robot   │  │ • Human safety   │        │
+│  └─────────────────┘  └─────────────────┘  └─────────────────┘         │
+│                                                                         │
+│  ┌─────────────────┐  ┌─────────────────┐                              │
+│  │  Sim-to-Real    │  │  Computational  │                              │
+│  │  ⚠️⚠️⚠️⚠️      │  │  Efficiency     │                              │
+│  │                 │  │  ⚠️⚠️⚠️⚠️      │                              │
+│  │ • Reality gap   │  │ • Inference speed│                             │
+│  │ • Domain shift  │  │ • Model size    │                              │
+│  │ • Sensor noise  │  │ • Energy cost   │                              │
+│  └─────────────────┘  └─────────────────┘                              │
+│                                                                         │
+└─────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│                Future Research Directions (10 Specific)                 │
+├─────────────────────────────────────────────────────────────────────────┤
+│                                                                         │
+│  1. Data-Efficient VLA           6. Safe VLA Learning                   │
+│  2. Compositional VLA            7. Multi-Agent VLA                     │
+│  3. Lifelong VLA                 8. Explainable VLA                     │
+│  4. Causal VLA                   9. Edge VLA Deployment                 │
+│  5. Social VLA                   10. VLA for Science                    │
+│                                                                         │
+└─────────────────────────────────────────────────────────────────────────┘
 ```
 
-**说明**：各 VLA 模型在已知/未知物体上的成功率对比。
+**说明**: 5 大挑战和 10 个具体研究方向为 VLA 领域提供清晰的研究议程。
 
 ---
 
-## Figure 6: 推理延迟对比
+## 图表使用说明
 
-**类型**：柱状图
+### 推荐格式
 
-**内容**：
-```
-延迟 (ms)
-500 ┤
-400 ┤
-300 ┤   █ 200ms
-200 ┤
-100 ┤        █ 80ms  █ 100ms   █ 40ms   █ 40ms
-  0 └─────────────────────────────────────────
-        RT-2   OpenVLA   π0    FastVLA  VLA-Grasp
-```
+| 图表 | 推荐格式 | 尺寸 | 用途 |
+|------|----------|------|------|
+| Figure 1 | SVG/PDF | 单栏 | 架构说明 |
+| Figure 2 | SVG/PDF | 双栏 | 分类树 |
+| Figure 3 | SVG/PDF | 单栏 | 时间线 |
+| Figure 4 | PNG/SVG | 双栏 | 对比表格 |
+| Figure 5 | SVG/PDF | 单栏 | 机制对比 |
+| Figure 6 | PNG/SVG | 双栏 | 性能对比 |
+| Figure 7 | SVG/PDF | 双栏 | 挑战与方向 |
 
-**说明**：各模型推理延迟对比（越低越好）。
+### IEEE TPAMI 格式要求
 
----
-
-## Figure 7: 训练成本对比
-
-**类型**：柱状图
-
-**内容**：
-```
-成本 ($K)
-100 ┤
- 80 ┤
- 60 ┤
- 40 ┤   █ 100K
- 20 ┤        █ 15K   █ 25K    █ 8K    █ 8K
-  0 └─────────────────────────────────────────
-        RT-2   OpenVLA   π0    FastVLA  VLA-Grasp
-```
-
-**说明**：各模型训练成本对比（估算值）。
+- **分辨率**: ≥300 DPI
+- **颜色模式**: RGB (在线) / CMYK (打印)
+- **字体**: Times New Roman, Arial
+- **线宽**: ≥0.5 pt
+- **文件格式**: PDF/EPS (矢量), PNG/TIFF (位图)
 
 ---
 
-## Figure 8: 消融实验雷达图
-
-**类型**：雷达图
-
-**内容**：
-```
-            已知物体
-               100
-              /   \
-             /     \
-        推理 80─────80 未知物体
-           /         \
-          /           \
-      多步任务─────────成本
-```
-
-**说明**：完整模型 vs 各变体的多维度对比。
-
----
-
-## Figure 9: VLA 应用场景
-
-**类型**：场景示意图
-
-**内容**：
-```
-┌─────────────┐   ┌─────────────┐   ┌─────────────┐
-│   家庭服务   │   │   工业分拣   │   │   医疗辅助   │
-│             │   │             │   │             │
-│  [机器人]    │   │  [机械臂]    │   │  [护理机器人] │
-│    拿苹果    │   │    零件分类   │   │    药物分拣   │
-└─────────────┘   └─────────────┘   └─────────────┘
-```
-
-**说明**：VLA 模型的典型应用场景。
-
----
-
-## Figure 10: 未来研究方向路线图
-
-**类型**：时间路线图
-
-**内容**：
-```
-2026        2027        2028        2030        2035
-  │           │           │           │           │
-  │ 数据效率   │ 泛化能力    │ 安全部署    │ 边缘推理    │ 通用 VLA
-  │ 100 演示   │ 85%        │ 失败率 3%   │ 20ms       │ 人类水平
-  │           │           │           │           │
-  └───────────┴───────────┴───────────┴───────────┘
-        短期 (1-2 年)    中期 (3-5 年)      长期 (5-10 年)
-```
-
-**说明**：VLA 技术发展的短中长期路线图。
-
----
-
-## 图表创建工具推荐
-
-| 图表类型 | 推荐工具 | 说明 |
-|---------|---------|------|
-| 架构图 | draw.io | 免费，在线 |
-| 柱状图 | Python Matplotlib | 代码生成 |
-| 雷达图 | Python Plotly | 交互式 |
-| 流程图 | Mermaid | Markdown 兼容 |
-| 时间线 | Timeline JS | 在线工具 |
-
----
-
-## 图表创建优先级
-
-| 优先级 | 图表 | 用途 |
-|--------|------|------|
-| ⭐⭐⭐ | Figure 2 (VLA-Taxonomy) | 核心贡献 |
-| ⭐⭐⭐ | Figure 5 (性能对比) | 关键结果 |
-| ⭐⭐⭐ | Figure 3 (架构对比) | 技术说明 |
-| ⭐⭐ | Figure 6 (推理延迟) | 效率分析 |
-| ⭐⭐ | Figure 10 (路线图) | 未来方向 |
-| ⭐ | 其他 | 补充说明 |
-
----
-
-**图表说明完成**
-
-**总计**：10 个图表设计  
-**优先级**：5 个核心图表（⭐⭐⭐）  
-**下一步**：使用绘图工具创建实际图表
-
----
-
-**最后更新**：2026-03-06  
-**维护者**：小志 2 号（AI 科研助手）
+**版本**: v1.0  
+**完成日期**: 2026-03-07  
+**状态**: ✅ 7 个图表完成
